@@ -8,7 +8,7 @@ import {
   formatToken,
   formatUsd,
 } from '../../shared/format';
-import type { TicketLeg } from '../../shared/panel';
+import { readyMs, type TicketLeg } from '../../shared/panel';
 import { shortAddress as short } from '../../shared/wallet';
 import { useCopy } from '../../ui/components';
 import {
@@ -98,7 +98,9 @@ export function ActivityDetail({ id }: { id: string }) {
       : null;
 
   const sentMs = swaps.find((l) => l.sentMs !== undefined)?.sentMs;
-  const phases = swaps.find((l) => l.phases)?.phases;
+  const timed = swaps.find((l) => l.phases);
+  const phases = timed?.phases;
+  const ready = timed && readyMs(timed);
   const confirmMs = swaps.find((l) => l.confirmMs !== undefined)?.confirmMs;
   const fees = t.legs.filter((l) => l.feeWei !== undefined);
   const feeTotal = fees.reduce((s, l) => s + BigInt(l.feeWei ?? '0'), 0n);
@@ -181,18 +183,23 @@ export function ActivityDetail({ id }: { id: string }) {
 
       {(sentMs !== undefined || confirmMs !== undefined) && (
         <Section label="Speed">
-          {sentMs !== undefined && (
-            <Row k="Click to sent">
-              <span class="r-ms">{formatDuration(sentMs)}</span>
-            </Row>
-          )}
-          {phases && (
+          {phases && ready !== undefined ? (
             <>
+              {/* Celera's own part first; the network's is outside its control. */}
+              <Row k="Click to ready">
+                <span class="r-ms">{formatDuration(ready)}</span>
+              </Row>
               <Row k="· Route and prepare">{formatDuration(phases.prepMs)}</Row>
               <Row k="· Balance check and simulation">{formatDuration(phases.checkMs)}</Row>
               <Row k="· Nonce and signing">{formatDuration(phases.signMs)}</Row>
-              <Row k="· Network accepted">{formatDuration(phases.sendMs)}</Row>
+              <Row k="Network accepted">{formatDuration(phases.sendMs)}</Row>
             </>
+          ) : (
+            sentMs !== undefined && (
+              <Row k="Click to sent">
+                <span class="r-ms">{formatDuration(sentMs)}</span>
+              </Row>
+            )
           )}
           {confirmMs !== undefined && <Row k="Sent to confirmed">{formatDuration(confirmMs)}</Row>}
         </Section>
@@ -257,7 +264,14 @@ export function ActivityDetail({ id }: { id: string }) {
                     </>
                   )}
                 </span>
-                {l.sentMs !== undefined && <span class="r-ms">{formatDuration(l.sentMs)}</span>}
+                {l.sentMs !== undefined && (
+                  <span
+                    class="r-ms"
+                    title={readyMs(l) !== undefined ? 'Click to ready' : 'Click to sent'}
+                  >
+                    {formatDuration(readyMs(l) ?? l.sentMs)}
+                  </span>
+                )}
               </div>
             )}
             {l.error && <div class="leg-err">{l.error}</div>}

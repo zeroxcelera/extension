@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { formatEther } from 'viem';
 import { formatCompact, formatDuration, formatToken } from '../../shared/format';
-import type { TicketLeg, TradeTicket } from '../../shared/panel';
+import { readyMs, type TicketLeg, type TradeTicket } from '../../shared/panel';
 import { trusted } from './hooks';
 
 export interface ToastItem {
@@ -78,6 +78,35 @@ function lifetime(item: ToastItem): number | null {
  * Every wallet failed for the same reason (e.g. all skipped for insufficient balance):
  * one line instead of the same error under each wallet.
  */
+/**
+ * How long a leg took: Celera's own part (click → signed) and the network accepting it,
+ * apart. Older records without the split show the total.
+ */
+function LegSpeed({ leg }: { leg: TicketLeg }) {
+  const ready = readyMs(leg);
+  if (ready === undefined) {
+    if (leg.sentMs === undefined) return null;
+    return (
+      <span class="t-ms" title="From the click until the network accepted it">
+        {' '}
+        in {formatDuration(leg.sentMs)}
+      </span>
+    );
+  }
+  return (
+    <>
+      <span class="t-ms" title="From the click until signed and ready to send">
+        {' '}
+        in {formatDuration(ready)}
+      </span>
+      <span class="t-net" title="The network accepting it">
+        {' '}
+        + {formatDuration(leg.phases?.sendMs ?? 0)} network
+      </span>
+    </>
+  );
+}
+
 function sharedError(legs: TicketLeg[]): string | null {
   if (legs.length < 2) return null;
   const first = legs[0]?.error;
@@ -213,12 +242,7 @@ function Toast({
                 ) : (
                   STATUS[l.status]
                 )}
-                {l.sentMs !== undefined && (
-                  <span class="t-ms" title="From the click until the network accepted it">
-                    {' '}
-                    in {formatDuration(l.sentMs)}
-                  </span>
-                )}
+                <LegSpeed leg={l} />
               </span>
               {l.error && <span class="t-err">{l.error}</span>}
               {l.status === 'submitted' && l.kind !== 'approve' && (

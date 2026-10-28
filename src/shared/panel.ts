@@ -104,6 +104,15 @@ export interface TicketLeg {
   amountOut?: string;
 }
 
+/**
+ * Ms from the click until the transaction was signed and ready to send: Celera's own part
+ * of sentMs. The rest (`phases.sendMs`) is the network accepting it.
+ */
+export function readyMs(leg: TicketLeg): number | undefined {
+  const p = leg.phases;
+  return p ? p.prepMs + p.checkMs + p.signMs : undefined;
+}
+
 /** Trade settings in force when the ticket was sent. */
 export interface TicketSettings {
   slippageBps: number;

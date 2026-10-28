@@ -4,7 +4,7 @@ import { browser } from 'wxt/browser';
 import { getChain } from '../../shared/chains';
 import { formatCompact, formatDuration, formatToken } from '../../shared/format';
 import type { PushEvent } from '../../shared/messages';
-import type { TradeTicket } from '../../shared/panel';
+import { readyMs, type TradeTicket } from '../../shared/panel';
 import { send } from '../../ui/api';
 
 type Filter = 'all' | 'buy' | 'sell' | 'bridge' | 'transfer';
@@ -224,7 +224,10 @@ export function Activity({
         const header = day !== lastDay ? <div class="day">{day}</div> : null;
         lastDay = day;
         const st = statusOf(t);
-        const firstMs = swapLegs(t).find((l) => l.sentMs !== undefined)?.sentMs;
+        // Celera's own part (click → signed); records from before the split show the total.
+        const first = swapLegs(t).find((l) => l.sentMs !== undefined);
+        const readyFirst = first && readyMs(first);
+        const firstMs = readyFirst ?? first?.sentMs;
         return (
           <div key={t.id}>
             {header}
@@ -238,7 +241,10 @@ export function Activity({
               <span class="t2">{summary(t)}</span>
               <span class="r2">
                 {firstMs !== undefined && (
-                  <span class="r-ms" title="Click to sent">
+                  <span
+                    class="r-ms"
+                    title={readyFirst !== undefined ? 'Click to ready' : 'Click to sent'}
+                  >
                     {formatDuration(firstMs)} ·{' '}
                   </span>
                 )}

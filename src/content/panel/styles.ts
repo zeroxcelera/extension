@@ -183,7 +183,8 @@ export const PANEL_CSS = `
 .t-st a { color: var(--focus); text-decoration: none; }
 .t-st a:hover { text-decoration: underline; }
 .t-ms { color: var(--flash); font-family: var(--num); }
-.t-err { grid-column: 2 / -1; color: #ffb3c1; }
+.t-net { color: var(--muted); font-family: var(--num); }
+.t-err { grid-column: 2 / -1; min-width: 0; color: #ffb3c1; overflow-wrap: anywhere; }
 .t-acts { grid-column: 2 / -1; display: flex; gap: 6px; margin-top: 2px; }
 /* Time left before the toast closes itself. Hover pauses it. */
 .ttl { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--border-strong); transform-origin: left; animation: ttl linear forwards; }
