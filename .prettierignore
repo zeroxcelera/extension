@@ -1,0 +1,6 @@
+.output/
+.wxt/
+pnpm-lock.yaml
+contracts/lib/
+contracts/out/
+contracts/cache/

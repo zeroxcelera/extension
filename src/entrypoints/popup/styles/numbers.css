@@ -1,0 +1,27 @@
+/* ── type: numbers in DIN ─────────────────────────────────────────── */
+.topbar h1,
+.total2 .big,
+.tval,
+.amt-input,
+.amt-out,
+.act .r1,
+.pill {
+  font-family: var(--num);
+}
+
+.topbar h1 {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+}
+
+.total2 .big {
+  font-weight: 600;
+  font-size: 30px;
+  letter-spacing: 0;
+}
+
+.nav-item[aria-current='page'] svg {
+  filter: drop-shadow(0 0 6px rgb(255 224 102 / 0.45));
+}

@@ -1,0 +1,1177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Celera popup mockup</title>
+    <style>
+      :root {
+        --bg: #0b0e13;
+        --surface: #12161e;
+        --surface-2: #181d27;
+        --border: #252b37;
+        --border-strong: #343c4c;
+        --text: #e7e9ee;
+        --muted: #8a93a4;
+        --faint: #5d6575;
+        --accent: #f5c84c;
+        --accent-ink: #1a1405;
+        --buy: #22c55e;
+        --sell: #f05252;
+        --warn: #f59e0b;
+        --focus: #7aa2ff;
+        --teal: #14b8a6;
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 24px 16px 48px;
+        background: #05070a;
+        color: var(--text);
+        font:
+          13px/1.45 ui-sans-serif,
+          system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+      }
+      h1.page {
+        font-size: 18px;
+        margin: 0 0 4px;
+      }
+      p.lead {
+        margin: 0 0 20px;
+        color: var(--muted);
+        max-width: 900px;
+      }
+      .screens {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 28px;
+      }
+      figure {
+        margin: 0;
+      }
+      figcaption {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 12px;
+        max-width: 360px;
+      }
+      figcaption b {
+        color: var(--text);
+      }
+
+      /* popup frame */
+      .pop {
+        width: 360px;
+        height: 600px;
+        background: var(--bg);
+        border: 1px solid var(--border-strong);
+        border-radius: 12px;
+        overflow: hidden;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+      .top {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .brand {
+        color: var(--accent);
+        font-weight: 750;
+        font-size: 15px;
+      }
+      .sp {
+        flex: 1;
+      }
+      .ib {
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+        border-radius: 8px;
+      }
+      .chainsel {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 28px;
+        padding: 0 10px;
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        background: var(--surface);
+        font-weight: 600;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .content {
+        overflow: auto;
+        padding: 12px;
+        display: grid;
+        align-content: start;
+        gap: 12px;
+      }
+
+      /* bottom nav */
+      .nav {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border-top: 1px solid var(--border);
+        background: #0d1117;
+      }
+      .nav a {
+        display: grid;
+        justify-items: center;
+        gap: 3px;
+        padding: 8px 0 10px;
+        color: var(--faint);
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 600;
+        position: relative;
+      }
+      .nav a.on {
+        color: var(--accent);
+      }
+      .nav a.on::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 30%;
+        right: 30%;
+        height: 2px;
+        background: var(--accent);
+        border-radius: 0 0 2px 2px;
+      }
+      .nav svg {
+        width: 20px;
+        height: 20px;
+      }
+      .badge {
+        position: absolute;
+        top: 4px;
+        left: calc(50% + 6px);
+        min-width: 16px;
+        height: 16px;
+        padding: 0 4px;
+        border-radius: 8px;
+        background: var(--warn);
+        color: #1a1000;
+        font-size: 10px;
+        line-height: 16px;
+        text-align: center;
+      }
+
+      /* common */
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--surface);
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .faint {
+        color: var(--faint);
+      }
+      .mono {
+        font-family: ui-monospace, 'JetBrains Mono', Consolas, monospace;
+      }
+      .lbl {
+        font-size: 10.5px;
+        font-weight: 700;
+        color: var(--faint);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn {
+        height: 36px;
+        border-radius: 8px;
+        border: 1px solid var(--border-strong);
+        background: var(--surface-2);
+        color: var(--text);
+        font: inherit;
+        font-weight: 700;
+        display: inline-grid;
+        place-items: center;
+        padding: 0 12px;
+      }
+      .btn.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--accent-ink);
+      }
+      .btn.ghost {
+        background: none;
+        border-color: transparent;
+        color: var(--muted);
+      }
+      .tag {
+        font-size: 9.5px;
+        font-weight: 700;
+        padding: 1px 5px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+        color: var(--accent);
+      }
+      .chips {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+      .chip {
+        height: 24px;
+        padding: 0 9px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        color: var(--muted);
+        display: inline-flex;
+        align-items: center;
+        font-size: 11.5px;
+        font-weight: 600;
+      }
+      .chip.on {
+        border-color: var(--border-strong);
+        background: var(--surface-2);
+        color: var(--text);
+      }
+
+      /* wallets */
+      .total {
+        padding: 14px;
+        display: grid;
+        gap: 2px;
+        background: linear-gradient(135deg, #1a1606, var(--surface) 55%);
+      }
+      .total .big {
+        font-size: 24px;
+        font-weight: 750;
+        letter-spacing: -0.01em;
+      }
+      .wl {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 6px;
+      }
+      .w {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 2px 10px;
+        padding: 9px 10px;
+      }
+      .w .name {
+        font-weight: 650;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .w .addr {
+        font-size: 11.5px;
+        color: var(--muted);
+      }
+      .w .bal {
+        text-align: right;
+        font-weight: 650;
+      }
+      .w .usd {
+        text-align: right;
+        font-size: 11px;
+        color: var(--faint);
+      }
+
+      /* activity */
+      .day {
+        font-size: 11px;
+        color: var(--faint);
+        margin: 2px 0 -4px;
+      }
+      .act {
+        display: grid;
+        grid-template-columns: 30px 1fr auto;
+        gap: 2px 10px;
+        align-items: center;
+        padding: 9px 10px;
+      }
+      .ico {
+        grid-row: span 2;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+      }
+      .ico.b {
+        background: color-mix(in srgb, var(--buy) 16%, transparent);
+        color: var(--buy);
+      }
+      .ico.s {
+        background: color-mix(in srgb, var(--sell) 16%, transparent);
+        color: var(--sell);
+      }
+      .ico.x {
+        background: color-mix(in srgb, var(--teal) 18%, transparent);
+        color: var(--teal);
+      }
+      .ico.t {
+        background: var(--surface-2);
+        color: var(--muted);
+      }
+      .act .t1 {
+        font-weight: 650;
+      }
+      .act .t2 {
+        font-size: 11.5px;
+        color: var(--muted);
+      }
+      .act .r1 {
+        text-align: right;
+        font-size: 11.5px;
+        font-weight: 650;
+      }
+      .act .r2 {
+        text-align: right;
+        font-size: 11px;
+        color: var(--faint);
+      }
+      .ok {
+        color: var(--buy);
+      }
+      .pend {
+        color: var(--warn);
+      }
+      .bad {
+        color: var(--sell);
+      }
+      .cb {
+        font-size: 9.5px;
+        font-weight: 700;
+        padding: 0 4px;
+        border-radius: 3px;
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
+        color: var(--muted);
+        margin-left: 4px;
+      }
+
+      /* bridge */
+      .leg {
+        padding: 10px 12px;
+        display: grid;
+        gap: 8px;
+      }
+      .leg .amt {
+        font-size: 22px;
+        font-weight: 750;
+      }
+      .sel {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 30px;
+        padding: 0 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border-strong);
+        background: var(--surface-2);
+        font-weight: 650;
+      }
+      .swap {
+        width: 32px;
+        height: 32px;
+        margin: -10px auto;
+        border-radius: 50%;
+        border: 1px solid var(--border-strong);
+        background: var(--bg);
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+        position: relative;
+        z-index: 1;
+      }
+      .quote {
+        padding: 10px 12px;
+        display: grid;
+        gap: 5px;
+        font-size: 12px;
+      }
+      .quote .row span:last-child {
+        margin-left: auto;
+      }
+      .note {
+        font-size: 11px;
+        color: var(--faint);
+        text-align: center;
+      }
+      .max {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      /* settings */
+      .tabs {
+        display: flex;
+        border: 1px solid var(--border-strong);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .tabs span {
+        flex: 1;
+        text-align: center;
+        padding: 6px 0;
+        color: var(--muted);
+        font-weight: 600;
+        background: var(--surface);
+      }
+      .tabs span.on {
+        background: var(--accent);
+        color: var(--accent-ink);
+      }
+      .field {
+        display: grid;
+        gap: 5px;
+      }
+      .field label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .input {
+        height: 34px;
+        border: 1px solid var(--border-strong);
+        border-radius: 8px;
+        background: var(--surface);
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+        color: var(--text);
+      }
+      .input.ph {
+        color: var(--faint);
+      }
+      .hint {
+        font-size: 11px;
+        color: var(--faint);
+      }
+      .new {
+        font-size: 9.5px;
+        font-weight: 800;
+        color: #04140a;
+        background: var(--buy);
+        border-radius: 4px;
+        padding: 0 5px;
+        margin-left: 6px;
+      }
+      .status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .sdot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--buy);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--buy) 20%, transparent);
+      }
+
+      /* wallets v2 */
+      .pills {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        min-height: 30px;
+        flex: none;
+        scrollbar-width: none;
+      }
+      .pill {
+        flex: none;
+        height: 28px;
+        padding: 0 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--muted);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 650;
+      }
+      .pill small {
+        font-size: 10px;
+        color: var(--faint);
+        font-weight: 700;
+      }
+      .pill.on {
+        border-color: var(--accent);
+        color: var(--text);
+        background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+      }
+      .pill .star {
+        font-style: normal;
+        color: var(--accent);
+        font-size: 10px;
+      }
+      .pill.add {
+        width: 28px;
+        padding: 0;
+        justify-content: center;
+        border-style: dashed;
+      }
+      .total2 {
+        padding: 12px;
+        display: grid;
+        gap: 4px;
+        background: linear-gradient(135deg, #1a1606, var(--surface) 55%);
+      }
+      .total2 .wname {
+        font-weight: 700;
+      }
+      .total2 .addr {
+        font-size: 11.5px;
+        color: var(--muted);
+      }
+      .total2 .big {
+        font-size: 26px;
+        font-weight: 750;
+        letter-spacing: -0.01em;
+        margin-top: 2px;
+      }
+      .more {
+        font-size: 11.5px;
+        color: var(--accent);
+        font-weight: 650;
+      }
+      .toks {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+      }
+      .tok {
+        display: grid;
+        grid-template-columns: 30px 1fr auto;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 2px;
+        border-bottom: 1px solid var(--border);
+      }
+      .tok:last-child {
+        border-bottom: 0;
+      }
+      .av {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        color: #fff;
+        font-size: 13px;
+      }
+      .tname,
+      .tval {
+        display: grid;
+        font-weight: 650;
+      }
+      .tname small,
+      .tval small {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--faint);
+      }
+      .tval {
+        text-align: right;
+      }
+      .dust {
+        display: flex;
+        align-items: center;
+        padding: 8px 10px;
+        border: 1px dashed var(--border-strong);
+        border-radius: 8px;
+        color: var(--faint);
+        font-size: 12px;
+      }
+      .showlink {
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .actions {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+      }
+      .act2 {
+        height: 30px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        display: grid;
+        place-items: center;
+        font-size: 12px;
+        font-weight: 650;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="page">Celera popup — proposed layout</h1>
+    <p class="lead">
+      Static mockup (no logic). Bottom navigation with four tabs replaces the current single screen.
+      Numbers are examples. Settings keeps today's General / Chains / Sites tabs; the Chains tab
+      gains a WebSocket RPC field.
+    </p>
+
+    <!-- shared icon sprites -->
+    <svg width="0" height="0" style="position: absolute">
+      <symbol
+        id="i-wallet"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2"
+        />
+        <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
+      </symbol>
+      <symbol
+        id="i-activity"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 8v4l3 3" />
+        <circle cx="12" cy="12" r="9" />
+      </symbol>
+      <symbol
+        id="i-bridge"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M4 7h13l-3-3" />
+        <path d="M20 17H7l3 3" />
+      </symbol>
+      <symbol
+        id="i-settings"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="3" />
+        <path
+          d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+        />
+      </symbol>
+      <symbol
+        id="i-lock"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="4" y="11" width="16" height="10" rx="2" />
+        <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+      </symbol>
+      <symbol
+        id="i-copy"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="9" y="9" width="12" height="12" rx="2" />
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+      </symbol>
+      <symbol
+        id="i-swap"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4" />
+      </symbol>
+      <symbol
+        id="i-chev"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="m6 9 6 6 6-6" />
+      </symbol>
+    </svg>
+
+    <div class="screens">
+      <!-- 1. WALLETS -->
+      <figure>
+        <div class="pop">
+          <div class="top">
+            <span class="brand">Celera</span><span class="sp"></span>
+            <span class="chainsel"
+              ><span class="dot" style="background: #3b82f6"></span>Base<svg width="12" height="12">
+                <use href="#i-chev" /></svg
+            ></span>
+            <span class="ib"
+              ><svg width="16" height="16"><use href="#i-lock" /></svg
+            ></span>
+          </div>
+          <div class="content">
+            <div class="pills">
+              <span class="pill">All<small>4</small></span>
+              <span class="pill on">W1<i class="star">★</i></span>
+              <span class="pill">W2</span>
+              <span class="pill">W3</span>
+              <span class="pill">W4</span>
+              <span class="pill add">+</span>
+            </div>
+
+            <div class="card total2">
+              <div class="row">
+                <span class="wname">Wallet 1</span>
+                <span class="addr mono">0xf297…3C10</span>
+                <svg width="12" height="12" class="faint"><use href="#i-copy" /></svg>
+                <span class="sp"></span>
+                <span class="more">Manage</span>
+              </div>
+              <span class="big">$461.20</span>
+              <span class="muted" style="font-size: 12px">0.1203 ETH + 3 tokens on Base</span>
+            </div>
+
+            <div class="row">
+              <span class="lbl">Tokens</span><span class="sp"></span
+              ><span class="faint" style="font-size: 11px">Sorted by value</span>
+            </div>
+            <ul class="toks">
+              <li class="tok">
+                <span class="av" style="background: #1d3b7a">Ξ</span>
+                <span class="tname">ETH<small>Native</small></span>
+                <span class="tval">$280.02<small>0.1203</small></span>
+              </li>
+              <li class="tok">
+                <span class="av" style="background: #5b3a1a">B</span>
+                <span class="tname">BRETT<small>Brett</small></span>
+                <span class="tval">$96.40<small>1.2M</small></span>
+              </li>
+              <li class="tok">
+                <span class="av" style="background: #3f2a6b">D</span>
+                <span class="tname">DEGEN<small>Degen</small></span>
+                <span class="tval">$41.12<small>85.3K</small></span>
+              </li>
+              <li class="tok">
+                <span class="av" style="background: #123f3a">A</span>
+                <span class="tname">AERO<small>Aerodrome</small></span>
+                <span class="tval">$11.17<small>12.4</small></span>
+              </li>
+            </ul>
+            <div class="dust">
+              <span>7 small or unpriced tokens hidden</span><span class="sp"></span
+              ><span class="showlink">Show</span>
+            </div>
+
+            <div class="actions">
+              <span class="act2">+ New</span><span class="act2">Import</span
+              ><span class="act2">Distribute</span><span class="act2">Collect</span>
+            </div>
+          </div>
+          <nav class="nav">
+            <a class="on"
+              ><svg><use href="#i-wallet" /></svg>Wallets</a
+            >
+            <a
+              ><svg><use href="#i-activity" /></svg>Activity<span class="badge">1</span></a
+            >
+            <a
+              ><svg><use href="#i-bridge" /></svg>Bridge</a
+            >
+            <a
+              ><svg><use href="#i-settings" /></svg>Settings</a
+            >
+          </nav>
+        </div>
+        <figcaption>
+          <b>Wallets (home), compact.</b> Wallets become a pill row (★ = primary, <b>All</b> sums
+          every wallet); the rest of the screen shows the <b>tokens held</b> on the selected chain,
+          sorted by value. Tokens appear automatically (from Celera trades plus a scan of incoming
+          transfers) and are priced on-chain. <b>Dust is hidden</b>: worth less than $1, or no
+          liquidity at all (spam airdrops) — one tap shows them. Tap a token for
+          <i>Open chart · Sell 50% · Sell 100%</i>; “Manage” opens rename / primary / export /
+          remove.
+        </figcaption>
+      </figure>
+
+      <!-- 1b. WALLETS: ALL -->
+      <figure>
+        <div class="pop">
+          <div class="top">
+            <span class="brand">Celera</span><span class="sp"></span>
+            <span class="chainsel"
+              ><span class="dot" style="background: #3b82f6"></span>Base<svg width="12" height="12">
+                <use href="#i-chev" /></svg
+            ></span>
+            <span class="ib"
+              ><svg width="16" height="16"><use href="#i-lock" /></svg
+            ></span>
+          </div>
+          <div class="content">
+            <div class="pills">
+              <span class="pill on">All<small>4</small></span>
+              <span class="pill">W1<i class="star">★</i></span>
+              <span class="pill">W2</span>
+              <span class="pill">W3</span>
+              <span class="pill">W4</span>
+              <span class="pill add">+</span>
+            </div>
+
+            <div class="card total2">
+              <div class="row">
+                <span class="wname">All wallets</span><span class="sp"></span
+                ><span class="more">4 wallets</span>
+              </div>
+              <span class="big">$812.94</span>
+              <span class="muted" style="font-size: 12px">0.1842 ETH + 4 tokens on Base</span>
+            </div>
+
+            <div class="row">
+              <span class="lbl">Tokens</span><span class="sp"></span
+              ><span class="faint" style="font-size: 11px">Sorted by value</span>
+            </div>
+            <ul class="toks">
+              <li class="tok">
+                <span class="av" style="background: #1d3b7a">Ξ</span>
+                <span class="tname">ETH<small>in 3 wallets</small></span>
+                <span class="tval">$428.71<small>0.1842</small></span>
+              </li>
+              <li class="tok">
+                <span class="av" style="background: #5b3a1a">B</span>
+                <span class="tname">BRETT<small>in 3 wallets</small></span>
+                <span class="tval">$289.20<small>3.6M</small></span>
+              </li>
+              <li class="tok">
+                <span class="av" style="background: #3f2a6b">D</span>
+                <span class="tname">DEGEN<small>in 1 wallet</small></span>
+                <span class="tval">$41.12<small>85.3K</small></span>
+              </li>
+              <li class="tok">
+                <span class="av" style="background: #4a1f2e">T</span>
+                <span class="tname">TOSHI<small>in 2 wallets</small></span>
+                <span class="tval">$42.74<small>131K</small></span>
+              </li>
+              <li class="tok">
+                <span class="av" style="background: #123f3a">A</span>
+                <span class="tname">AERO<small>in 1 wallet</small></span>
+                <span class="tval">$11.17<small>12.4</small></span>
+              </li>
+            </ul>
+            <div class="dust">
+              <span>12 small or unpriced tokens hidden</span><span class="sp"></span
+              ><span class="showlink">Show</span>
+            </div>
+          </div>
+          <nav class="nav">
+            <a class="on"
+              ><svg><use href="#i-wallet" /></svg>Wallets</a
+            >
+            <a
+              ><svg><use href="#i-activity" /></svg>Activity<span class="badge">1</span></a
+            >
+            <a
+              ><svg><use href="#i-bridge" /></svg>Bridge</a
+            >
+            <a
+              ><svg><use href="#i-settings" /></svg>Settings</a
+            >
+          </nav>
+        </div>
+        <figcaption>
+          <b>Same screen with “All”.</b> Holdings summed across wallets; each token says how many
+          wallets hold it. Tapping a token here sells from every wallet that holds it (same
+          multi-wallet flow as the panel).
+        </figcaption>
+      </figure>
+
+      <!-- 2. ACTIVITY -->
+      <figure>
+        <div class="pop">
+          <div class="top">
+            <span class="brand">Celera</span><span class="sp"></span>
+            <span class="chainsel"
+              >All chains<svg width="12" height="12"><use href="#i-chev" /></svg
+            ></span>
+            <span class="ib"
+              ><svg width="16" height="16"><use href="#i-lock" /></svg
+            ></span>
+          </div>
+          <div class="content">
+            <div class="chips">
+              <span class="chip on">All</span><span class="chip">Buys</span
+              ><span class="chip">Sells</span><span class="chip">Bridge</span
+              ><span class="chip">Transfers</span>
+            </div>
+            <div class="day">Today</div>
+            <div class="card act">
+              <span class="ico x">⇄</span><span class="t1">Bridge Base → BSC</span
+              ><span class="r1 pend">Pending</span>
+              <span class="t2">0.01 ETH → 0.0311 BNB · Wallet 1</span><span class="r2">13:42</span>
+            </div>
+            <div class="card act">
+              <span class="ico b">↓</span><span class="t1">Buy PEPE<span class="cb">ETH</span></span
+              ><span class="r1 ok">Confirmed</span>
+              <span class="t2">0.002 ETH → 1.06M PEPE · Wallet 1</span
+              ><span class="r2">13:30 ↗</span>
+            </div>
+            <div class="card act">
+              <span class="ico s">↑</span
+              ><span class="t1">Sell BRETT<span class="cb">BASE</span></span
+              ><span class="r1 ok">2/3 wallets</span>
+              <span class="t2">50% · 1.2M BRETT → 0.0187 ETH</span><span class="r2">12:58 ↗</span>
+            </div>
+            <div class="card act">
+              <span class="ico b">↓</span
+              ><span class="t1">Buy 疯狂水世界<span class="cb">BSC</span></span
+              ><span class="r1 bad">Failed</span>
+              <span class="t2">Simulation failed: slippage · Wallet 2</span
+              ><span class="r2">12:41</span>
+            </div>
+            <div class="day">Yesterday</div>
+            <div class="card act">
+              <span class="ico t">→</span
+              ><span class="t1">Distribute<span class="cb">BASE</span></span
+              ><span class="r1 ok">Confirmed</span> <span class="t2">0.02 ETH × 3 wallets</span
+              ><span class="r2">21:15 ↗</span>
+            </div>
+            <div class="card act">
+              <span class="ico b">↓</span
+              ><span class="t1">Buy GIGATENEV<span class="cb">RH</span></span
+              ><span class="r1 ok">Confirmed</span>
+              <span class="t2">0.005 ETH → 3.8M GIGATENEV</span><span class="r2">20:02 ↗</span>
+            </div>
+          </div>
+          <nav class="nav">
+            <a
+              ><svg><use href="#i-wallet" /></svg>Wallets</a
+            >
+            <a class="on"
+              ><svg><use href="#i-activity" /></svg>Activity<span class="badge">1</span></a
+            >
+            <a
+              ><svg><use href="#i-bridge" /></svg>Bridge</a
+            >
+            <a
+              ><svg><use href="#i-settings" /></svg>Settings</a
+            >
+          </nav>
+        </div>
+        <figcaption>
+          <b>Activity.</b> Every buy, sell, bridge and transfer from the panel or popup, newest
+          first, kept locally (last 200). Filter by type and chain. ↗ opens the explorer; tapping a
+          row shows per-wallet legs. Badge = items still pending.
+        </figcaption>
+      </figure>
+
+      <!-- 3. BRIDGE -->
+      <figure>
+        <div class="pop">
+          <div class="top">
+            <span class="brand">Celera</span><span class="sp"></span>
+            <span class="ib"
+              ><svg width="16" height="16"><use href="#i-lock" /></svg
+            ></span>
+          </div>
+          <div class="content">
+            <div class="card leg">
+              <div class="row">
+                <span class="lbl">From</span><span class="sp"></span
+                ><span class="faint" style="font-size: 11.5px">Balance 0.1203 ETH</span
+                ><span class="max">MAX</span>
+              </div>
+              <div class="row">
+                <span class="amt">0.05</span><span class="sp"></span>
+                <span class="sel"
+                  ><span class="dot" style="background: #3b82f6"></span>ETH · Base<svg
+                    width="12"
+                    height="12"
+                  >
+                    <use href="#i-chev" /></svg
+                ></span>
+              </div>
+              <div class="row">
+                <span class="muted" style="font-size: 12px">≈ $116.37</span><span class="sp"></span
+                ><span class="sel" style="height: 26px; font-size: 12px"
+                  >Wallet 1<svg width="12" height="12"><use href="#i-chev" /></svg
+                ></span>
+              </div>
+            </div>
+            <div class="swap">
+              <svg width="16" height="16"><use href="#i-swap" /></svg>
+            </div>
+            <div class="card leg">
+              <div class="row"><span class="lbl">To</span></div>
+              <div class="row">
+                <span class="amt">0.1557</span><span class="sp"></span>
+                <span class="sel"
+                  ><span class="dot" style="background: #f0b90b"></span>BNB · BSC<svg
+                    width="12"
+                    height="12"
+                  >
+                    <use href="#i-chev" /></svg
+                ></span>
+              </div>
+              <div class="row">
+                <span class="muted" style="font-size: 12px">≈ $115.93</span><span class="sp"></span
+                ><span class="sel" style="height: 26px; font-size: 12px"
+                  >Wallet 1<svg width="12" height="12"><use href="#i-chev" /></svg
+                ></span>
+              </div>
+            </div>
+            <div class="card quote">
+              <div class="row"><span class="muted">Fee</span><span>$0.44</span></div>
+              <div class="row"><span class="muted">Estimated time</span><span>~2 s</span></div>
+              <div class="row"><span class="muted">Route</span><span>Relay</span></div>
+            </div>
+            <span class="btn primary" style="height: 40px">Bridge 0.05 ETH</span>
+            <p class="note">
+              Recipient is always one of your wallets. Your USD limits apply. Powered by Relay.
+            </p>
+          </div>
+          <nav class="nav">
+            <a
+              ><svg><use href="#i-wallet" /></svg>Wallets</a
+            >
+            <a
+              ><svg><use href="#i-activity" /></svg>Activity</a
+            >
+            <a class="on"
+              ><svg><use href="#i-bridge" /></svg>Bridge</a
+            >
+            <a
+              ><svg><use href="#i-settings" /></svg>Settings</a
+            >
+          </nav>
+        </div>
+        <figcaption>
+          <b>Bridge (Relay).</b> Native asset between Ethereum, Base, BSC, Robinhood and Arbitrum
+          (all supported by Relay). Quote refreshes as you type; the deposit is checked by the
+          transaction validator (Relay contract allowlisted, recipient must be your wallet) before
+          signing. Progress shows in Activity.
+        </figcaption>
+      </figure>
+
+      <!-- 4. SETTINGS / CHAINS with WebSocket -->
+      <figure>
+        <div class="pop">
+          <div class="top">
+            <span class="brand">Celera</span><span class="sp"></span>
+            <span class="ib"
+              ><svg width="16" height="16"><use href="#i-lock" /></svg
+            ></span>
+          </div>
+          <div class="content">
+            <div class="tabs">
+              <span>General</span><span class="on">Chains</span><span>Sites</span>
+            </div>
+            <div class="input" style="justify-content: space-between">
+              Base<svg width="12" height="12"><use href="#i-chev" /></svg>
+            </div>
+            <span class="lbl">Network</span>
+            <div class="field">
+              <label>Custom RPC (https)</label>
+              <div class="input ph mono">https://base-mainnet.g.alchemy.com/v2/…</div>
+            </div>
+            <div class="field">
+              <label>WebSocket RPC (wss)<span class="new">NEW</span></label>
+              <div class="input mono">wss://base-mainnet.g.alchemy.com/v2/…</div>
+              <span class="status"><span class="sdot"></span>Connected · new blocks streaming</span>
+              <span class="hint"
+                >Optional. Instant confirmations and per-block quote / fee refresh. HTTPS is still
+                used for quotes and sending, and takes over automatically if the socket drops.</span
+              >
+            </div>
+            <span class="lbl">Trading</span>
+            <div class="field">
+              <label>Slippage (%)</label>
+              <div class="input">10</div>
+            </div>
+            <div class="row" style="gap: 8px">
+              <div class="field" style="flex: 1">
+                <label>Low (gwei)</label>
+                <div class="input">0.001</div>
+              </div>
+              <div class="field" style="flex: 1">
+                <label>Medium</label>
+                <div class="input">0.01</div>
+              </div>
+              <div class="field" style="flex: 1">
+                <label>High</label>
+                <div class="input">0.05</div>
+              </div>
+            </div>
+          </div>
+          <nav class="nav">
+            <a
+              ><svg><use href="#i-wallet" /></svg>Wallets</a
+            >
+            <a
+              ><svg><use href="#i-activity" /></svg>Activity</a
+            >
+            <a
+              ><svg><use href="#i-bridge" /></svg>Bridge</a
+            >
+            <a class="on"
+              ><svg><use href="#i-settings" /></svg>Settings</a
+            >
+          </nav>
+        </div>
+        <figcaption>
+          <b>Settings → Chains.</b> Same as today plus an optional <b>WebSocket RPC</b> per chain
+          with a live connection status. The ⚙ and 🔒 in the header move: settings becomes a tab,
+          lock stays top-right.
+        </figcaption>
+      </figure>
+    </div>
+  </body>
+</html>

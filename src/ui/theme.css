@@ -1,0 +1,290 @@
+:root {
+  --bg: #0d1220;
+  --surface: #141b2d;
+  --surface-2: #1b2438;
+  --border: #232d45;
+  --border-strong: #31405f;
+  --text: #e8ecf6;
+  --muted: #8e9ab5;
+  --faint: #5f6b87;
+  --accent: #ffe066;
+  --accent-ink: #1a1405;
+  --buy: #2ee59d;
+  --sell: #ff5c7a;
+  --warn: #ffb547;
+  --focus: #8fb4ff;
+  --radius: 9px;
+  /* Numbers and keys: Bahnschrift (Windows DIN), else DIN Alternate / system. */
+  --num: 'Bahnschrift', 'DIN Alternate', 'DIN 2014', ui-sans-serif, system-ui, sans-serif;
+  --mono: ui-monospace, 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font:
+    13px/1.45 ui-sans-serif,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 650;
+}
+
+h1 {
+  font-size: 18px;
+}
+
+h2 {
+  font-size: 15px;
+}
+
+p {
+  margin: 0;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.mono {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.stack {
+  display: grid;
+  gap: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--muted);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn--primary:hover:not(:disabled) {
+  border-color: #fff3c4;
+}
+
+.btn--danger {
+  border-color: color-mix(in srgb, var(--sell) 60%, transparent);
+  color: var(--sell);
+  background: transparent;
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn--sm {
+  min-height: 28px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.btn:focus-visible,
+.input:focus-visible,
+.select:focus-visible,
+.check input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Fields */
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label,
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+.textarea {
+  min-height: 88px;
+  resize: vertical;
+  font-family: var(--mono);
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--sell);
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--faint);
+}
+
+.error {
+  font-size: 12px;
+  color: var(--sell);
+}
+
+.notice {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.notice--warn {
+  border-color: color-mix(in srgb, var(--warn) 45%, transparent);
+  color: #fcd38a;
+}
+
+.notice--danger {
+  border-color: color-mix(in srgb, var(--sell) 45%, transparent);
+  color: #fca5a5;
+}
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.check input {
+  margin-top: 2px;
+  accent-color: var(--accent);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-weight: 750;
+  letter-spacing: 0.02em;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.secret {
+  padding: 10px 12px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--bg);
+  font-family: var(--mono);
+  word-break: break-all;
+  user-select: all;
+}
+
+/* Dropdowns: one look for every <select> (chain, wallet, settings). The native arrow is
+   replaced by a chevron in the muted text colour; the open list stays dark. */
+select.select {
+  appearance: none;
+  padding-right: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238e9ab5' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 6px;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: border-color 0.12s ease;
+}
+
+select.select:hover {
+  border-color: var(--muted);
+}
+
+select.select:focus-visible {
+  outline: none;
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px rgb(143 180 255 / 0.18);
+}
+
+select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+select option {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+select option:disabled {
+  color: var(--faint);
+}

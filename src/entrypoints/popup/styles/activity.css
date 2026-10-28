@@ -1,0 +1,234 @@
+/* ── activity ──────────────────────────────────────────────────────── */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.chip {
+  height: 24px;
+  padding: 0 9px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chip[aria-selected='true'] {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.day {
+  margin: 4px 0 2px;
+  font-size: 11px;
+  color: var(--faint);
+}
+
+.act {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 30px 1fr auto;
+  gap: 2px 10px;
+  align-items: center;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ico {
+  grid-row: span 2;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+
+.ico.b {
+  background: color-mix(in srgb, var(--buy) 16%, transparent);
+  color: var(--buy);
+}
+
+.ico.s {
+  background: color-mix(in srgb, var(--sell) 16%, transparent);
+  color: var(--sell);
+}
+
+.ico.x {
+  background: color-mix(in srgb, #14b8a6 18%, transparent);
+  color: #14b8a6;
+}
+
+.ico.t {
+  background: var(--surface-2);
+  color: var(--muted);
+}
+
+.act .t1 {
+  font-weight: 650;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.act .t2 {
+  font-size: 11.5px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.act .r1 {
+  text-align: right;
+  font-size: 11.5px;
+  font-weight: 650;
+}
+
+.act .r2 {
+  text-align: right;
+  font-size: 11px;
+  color: var(--faint);
+}
+
+.ok {
+  color: var(--buy);
+}
+
+.faint {
+  color: var(--faint);
+}
+
+.pend {
+  color: var(--warn);
+}
+
+.bad {
+  color: var(--sell);
+}
+
+.cb {
+  margin-left: 5px;
+  padding: 0 4px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 9.5px;
+  font-weight: 700;
+}
+
+.r-ms {
+  color: var(--accent);
+  font-family: var(--num);
+}
+
+/* ── activity detail ───────────────────────────────────────────────── */
+.td-head {
+  display: grid;
+  grid-template-columns: 30px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 2px 2px 6px;
+}
+
+.td-head .ico {
+  grid-row: auto;
+}
+
+.td-title strong {
+  font-size: 15px;
+}
+
+.usd {
+  margin-left: 6px;
+  color: var(--faint);
+}
+
+.td-title .faint {
+  font-size: 11.5px;
+  margin-top: 1px;
+}
+
+.td-status {
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.td-sec {
+  margin-top: 6px;
+}
+
+.td-label {
+  margin: 0 0 4px 2px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.td-card {
+  display: grid;
+  gap: 5px;
+  padding: 9px 11px;
+  font-size: 12.5px;
+}
+
+.kv {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  min-height: 20px;
+}
+
+.kv-v {
+  text-align: right;
+  font-family: var(--num);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.td-leg + .td-leg {
+  border-top: 1px solid var(--border);
+  padding-top: 6px;
+}
+
+.td-hash {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+}
+
+.icon-btn.sm {
+  width: 22px;
+  height: 22px;
+}
+
+.td-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.td-actions .btn {
+  text-align: center;
+  text-decoration: none;
+}
+
+.leg-err {
+  flex-basis: 100%;
+  color: #fca5a5;
+}

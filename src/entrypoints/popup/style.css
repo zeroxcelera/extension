@@ -1,0 +1,10 @@
+/* The popup's styles, one file per screen. Order matters: later files build on earlier ones. */
+@import './styles/base.css';
+@import './styles/shell.css';
+@import './styles/wallets.css';
+@import './styles/activity.css';
+@import './styles/bridge.css';
+@import './styles/settings.css';
+@import './styles/numbers.css';
+@import './styles/picker.css';
+@import './styles/send.css';

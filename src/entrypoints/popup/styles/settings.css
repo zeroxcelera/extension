@@ -1,0 +1,28 @@
+/* ── settings ──────────────────────────────────────────────────────── */
+.ws-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.ws-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--faint);
+}
+
+.ws-connected .ws-dot {
+  background: var(--buy);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--buy) 20%, transparent);
+}
+
+.ws-connecting .ws-dot {
+  background: var(--warn);
+}
+
+.ws-error .ws-dot {
+  background: var(--sell);
+}

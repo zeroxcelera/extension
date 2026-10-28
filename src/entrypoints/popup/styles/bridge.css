@@ -1,0 +1,54 @@
+/* ── bridge ────────────────────────────────────────────────────────── */
+.leg {
+  padding: 10px 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.amt-input {
+  flex: 1;
+  width: 0; /* let flex size it; the intrinsic input width would widen the whole page */
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 22px;
+  font-weight: 750;
+}
+
+.amt-input:focus {
+  outline: none;
+}
+
+.amt-out {
+  font-size: 22px;
+  font-weight: 750;
+}
+
+.swap {
+  position: relative;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  margin: -12px auto;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.quote {
+  padding: 10px 12px;
+  display: grid;
+  gap: 5px;
+  font-size: 12px;
+}
+
+.quote a {
+  color: var(--focus);
+}

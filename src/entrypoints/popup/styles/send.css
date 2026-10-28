@@ -1,0 +1,63 @@
+/* ── send / receive ────────────────────────────────────────────────── */
+.checks {
+  display: grid;
+  gap: 4px;
+  margin: -4px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+
+.chk::before {
+  margin-right: 6px;
+}
+
+.chk--ok {
+  color: var(--buy);
+}
+
+.chk--ok::before {
+  content: '✓';
+}
+
+.chk--warn {
+  color: var(--warn);
+}
+
+.chk--warn::before,
+.chk--bad::before {
+  content: '!';
+  font-weight: 800;
+}
+
+.chk--bad {
+  color: var(--sell);
+}
+
+.chk--info {
+  color: var(--muted);
+}
+
+.chk--info::before {
+  content: 'i';
+  font-weight: 800;
+}
+
+.addr-full {
+  padding: 9px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--bg);
+  font-size: 12.5px;
+  line-height: 1.5;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.qr {
+  display: block;
+  width: 168px;
+  height: 168px;
+  margin: 4px auto 0;
+  border-radius: 10px;
+}

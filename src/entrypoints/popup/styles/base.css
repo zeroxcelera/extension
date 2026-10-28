@@ -1,0 +1,184 @@
+/* Popup frame and the pieces every screen uses (rows, tags, tabs, titles). */
+
+body {
+  width: 360px;
+  height: 600px;
+  overflow: hidden;
+}
+
+.popup {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 600px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar h1 {
+  font-size: 15px;
+}
+
+.content {
+  overflow-y: auto;
+  min-height: 0;
+  padding: 12px;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.icon-btn:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.wallets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.wallet {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.wallet__main {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+  text-align: left;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.wallet__main:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.wallet__name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.wallet__addr {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid var(--border-strong);
+  color: var(--muted);
+}
+
+.tag--primary {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  color: var(--accent);
+}
+
+.section-title {
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--muted);
+}
+
+.danger-zone {
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--sell) 35%, transparent);
+  border-radius: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.center {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 32px 8px;
+}
+
+.seg-tabs {
+  display: flex;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.seg-tabs button {
+  flex: 1;
+  padding: 6px 0;
+  border: 0;
+  background: var(--surface);
+  color: var(--muted);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.seg-tabs button[aria-selected='true'] {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+fieldset.card {
+  margin: 0;
+}
+
+legend.section-title {
+  padding: 0 4px;
+}

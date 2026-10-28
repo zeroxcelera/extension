@@ -1,0 +1,15 @@
+node_modules/
+.output/
+.wxt/
+dist/
+coverage/
+*.log
+.env*
+!.env.example
+.claude/
+# Foundry (contracts/): dependencies are installed with `forge install`, see contracts/README.md
+contracts/lib/
+contracts/out/
+contracts/cache/
+# forge script run logs (they name the deploying wallet)
+contracts/broadcast/

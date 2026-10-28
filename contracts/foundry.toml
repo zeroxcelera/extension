@@ -1,0 +1,18 @@
+[profile.default]
+src = "src"
+test = "test"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.28"
+# Shanghai keeps the bytecode valid on every target chain (no Cancun-only opcodes).
+evm_version = "shanghai"
+optimizer = true
+optimizer_runs = 10000
+bytecode_hash = "none"
+fuzz = { runs = 1000 }
+
+[rpc_endpoints]
+ethereum = "${ETHEREUM_RPC_URL}"
+base = "${BASE_RPC_URL}"
+bsc = "${BSC_RPC_URL}"
+robinhood = "${ROBINHOOD_RPC_URL}"
