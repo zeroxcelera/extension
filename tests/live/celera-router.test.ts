@@ -25,9 +25,11 @@ import {
   routerSellCalls,
   type FundedRoute,
 } from '../../src/background/trade/celera-router';
+import { minOutAfter } from '../../src/background/trade/engine';
 import { launchpadVenues } from '../../src/background/trade/launchpads';
 import { permitDomain } from '../../src/background/trade/permit2';
 import { Routing } from '../../src/background/trade/routing';
+import { TaxService } from '../../src/background/trade/tax';
 import type { VenueCtx } from '../../src/background/trade/types';
 import { PERMIT2, UNISWAP } from '../../src/background/trade/uniswap/addresses';
 import { uniswapVenue } from '../../src/background/trade/uniswap/venue';
@@ -117,13 +119,20 @@ async function roundTrip(chainId: number, token: Address, venueId: string, eth: 
     expect(v.ok, JSON.stringify(v.actions.filter((a) => !a.ok))).toBe(true);
   };
 
-  // Buy: quotes as the engine takes them, 10% slippage for the live market.
+  // Buy: quotes and minimums as the engine takes them (1% on the leg, after the asset's own
+  // transfer tax), 10% slippage on the curve for the live market.
   const [assetOut] = await legVenue.quote(ctx, funding!.leg, 'buy', [eth]);
-  const minOut = (route.out * 90n) / 100n;
+  const assetTax = await new TaxService().get(
+    ctx,
+    { venue: legVenue, pool: funding!.leg, out: assetOut! },
+    eth,
+  );
+  const assetBps = assetTax?.transfer.buyBps ?? 0;
+  const minOut = minOutAfter(route.out, assetBps, 1_000);
   const buyCalls = routerBuyCalls({
     ...r,
     amountIn: eth,
-    assetMin: (assetOut! * 95n) / 100n,
+    assetMin: minOutAfter(assetOut!, assetBps, 100),
     minOut,
   });
   const buy = {
@@ -159,6 +168,9 @@ async function roundTrip(chainId: number, token: Address, venueId: string, eth: 
   // Sell exactly what was bought: approve Permit2 once, then the router call with a permit.
   const sellOut = await routing.requote(ctx, route.pool, 'sell', bought);
   const [assetBack] = await funding!.quoteAsset(ctx, 'sell', [bought]);
+  // A curve nobody has bought on yet has no reserve to quote a sell from: the simulated buy
+  // above is not in the state quotes read. Only the buy is checked then.
+  if (sellOut === null || !assetBack) return { bought, out: null, eth, label: route.pool.label };
   const sellMin = ((sellOut ?? 1n) * 85n) / 100n;
   const permit = buildTransferPermit(token, bought, nowS);
   const signature = await user.signTypedData({
@@ -255,6 +267,20 @@ describe.skipIf(!creation)('Celera Router (simulated on mainnet state)', () => {
     if (!res) return t.skip();
     expect(res.label).toBe('Flap curve via PEPE');
     expect(res.out).toBeGreaterThan((res.eth * 85n) / 100n);
+  });
+
+  it('BSC: Flap curve quoted in GIGGLE (an asset taxed 5%), buy and sell in one transaction each', async (t) => {
+    const res = await roundTrip(
+      56,
+      '0x02077a5C3E57Ef3f48B0756E310fcD803Fe67777',
+      'flap',
+      parseEther('0.001'),
+    );
+    if (!res) return t.skip();
+    expect(res.label).toBe('Flap curve via GIGGLE');
+    expect(res.bought).toBeGreaterThan(0n);
+    // Two 5% asset taxes and the curve fees: still most of it back.
+    if (res.out !== null) expect(res.out).toBeGreaterThan((res.eth * 70n) / 100n);
   });
 
   it('Robinhood: Pons curve quoted in USDG, buy and sell in one transaction each', async (t) => {

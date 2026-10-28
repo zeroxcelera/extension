@@ -230,5 +230,8 @@
 
 .leg-err {
   flex-basis: 100%;
+  min-width: 0;
   color: #fca5a5;
+  /* Node errors can carry long unbroken hex: wrap it instead of widening the page. */
+  overflow-wrap: anywhere;
 }

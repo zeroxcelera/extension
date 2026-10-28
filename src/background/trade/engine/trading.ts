@@ -19,7 +19,7 @@ import type { WalletAccount } from '../../../shared/wallet';
 import { erc20Abi } from '../../chain/abis';
 import { PERMIT_TYPES, buildPermit, permitDomain, readPermit2Allowance } from '../permit2';
 import { tokenReceived } from '../receipts';
-import { taxGate } from '../tax';
+import { taxGate, type TaxInfo } from '../tax';
 import type { Routed } from '../routing';
 import {
   buildTx,
@@ -328,6 +328,23 @@ export class TradingFlow {
   }
 
   /**
+   * The funding asset's own transfer tax (GIGGLE on BSC takes one; VIRTUAL, PEPE and USDG
+   * do not), measured on its leg pool like any token's and cached. Pool quotes leave it
+   * out, so every minimum after the leg allows for it. `nativeIn` buys `assetOut` there.
+   */
+  private assetTax(
+    ctx: VenueCtx,
+    legVenue: Venue,
+    funding: Funding,
+    nativeIn: bigint,
+    assetOut: bigint,
+  ): Promise<TaxInfo | null> {
+    return this.d.tax
+      .get(ctx, { venue: legVenue, pool: funding.leg, out: assetOut }, nativeIn)
+      .catch(() => null);
+  }
+
+  /**
    * Buy on a funded pool in ONE transaction through the Celera Router: native → asset,
    * approve, curve buy. Sells of the token then go through the router as well, so the
    * approval that follows is for Permit2.
@@ -350,13 +367,16 @@ export class TradingFlow {
       this.core.update(st);
       return;
     }
+    const assetBps =
+      (await this.assetTax(ctx, via.legVenue, funding, amount, assetOut))?.transfer.buyBps ?? 0;
     const taxBps = this.d.tax.peek(ctx, route)?.transfer.buyBps ?? 0;
-    const minOut = minOutAfter(route.out, taxBps, preset.slippageBps);
+    // The curve is quoted on the asset before its tax: less of it arrives, so less comes out.
+    const minOut = minOutAfter(route.out, taxBps + assetBps, preset.slippageBps);
     const r = this.fundedRoute(ctx, wallet.address, route, funding, via);
     const calls = routerBuyCalls({
       ...r,
       amountIn: amount,
-      assetMin: minOutAfter(assetOut, 0, FUNDING_SLIPPAGE_BPS),
+      assetMin: minOutAfter(assetOut, assetBps, FUNDING_SLIPPAGE_BPS),
       minOut,
     });
     const tx: TxDraft = {
@@ -439,6 +459,8 @@ export class TradingFlow {
     const stepIdx = st.ticket.legs.length - 1;
     const [assetOut] = await legVenue.quote(ctx, funding.leg, 'buy', [amount]);
     if (!assetOut) return fail(`No ${funding.symbol} quote`);
+    const assetBps =
+      (await this.assetTax(ctx, legVenue, funding, amount, assetOut))?.transfer.buyBps ?? 0;
     const gate = this.balanceGate(chain, ctx, preset, wallet, amount);
     const funded = await this.core.execute(st, stepIdx, {
       chain,
@@ -448,7 +470,7 @@ export class TradingFlow {
       tx: legVenue.buildBuy(ctx, funding.leg, {
         wallet: wallet.address,
         amountIn: amount,
-        minOut: minOutAfter(assetOut, 0, FUNDING_SLIPPAGE_BPS),
+        minOut: minOutAfter(assetOut, assetBps, FUNDING_SLIPPAGE_BPS),
         deadline: deadline(),
       }),
       vctx: this.core.validationCtx(
@@ -903,7 +925,10 @@ export class TradingFlow {
     });
 
     const taxBps = this.d.tax.peek(ctx, route)?.transfer.sellBps ?? 0;
-    const minOut = minOutAfter(q.out, taxBps, preset.slippageBps);
+    // Selling the asset back to native pays its own tax too (cached from the buy, as a rule).
+    const assetBps =
+      (await this.assetTax(ctx, via.legVenue, funding, q.out, assetOut))?.transfer.sellBps ?? 0;
+    const minOut = minOutAfter(q.out, taxBps + assetBps, preset.slippageBps);
     const r = this.fundedRoute(ctx, wallet.address, route, funding, via);
     const calls = routerSellCalls({
       ...r,

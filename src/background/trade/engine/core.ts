@@ -161,7 +161,12 @@ export function shortErr(e: unknown): string {
     msg = err.details;
   if (/insufficient funds/i.test(msg)) return 'Insufficient balance for gas';
   // Never echo an address back into the ticket; the rest is a node's text: clean it.
-  const line = msg.replace(/0x[0-9a-fA-F]{40}/g, '0x…').split('\n')[0] ?? '';
+  // Long hex (raw revert data) is cut to its ends: in full it only stretches the layout.
+  const line =
+    msg
+      .replace(/0x[0-9a-fA-F]{40}(?![0-9a-fA-F])/g, '0x…')
+      .replace(/0x([0-9a-fA-F]{6})[0-9a-fA-F]{12,}([0-9a-fA-F]{6})/g, '0x$1…$2')
+      .split('\n')[0] ?? '';
   return sanitizeLabel(line, 160) || 'error';
 }
 

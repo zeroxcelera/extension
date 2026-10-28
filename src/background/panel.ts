@@ -195,6 +195,19 @@ export async function panelQuotes(
       };
     // Measured and failed (funded curves are never measured, by design).
     else taxUnknown = !probeRoute.venue.funding?.(ctx, probeRoute.pool);
+    // A funded curve's asset may tax transfers itself (GIGGLE on BSC): measure it on its leg
+    // pool ahead of the click, so the trade's minimums allow for it without waiting.
+    const funding = probeRoute.venue.funding?.(ctx, probeRoute.pool);
+    const legVenue = funding && d.routing.venue(funding.leg.venueId);
+    if (funding && legVenue) {
+      const leg = { venue: legVenue, pool: funding.leg, out: 0n };
+      const nativeIn = buyIn[probeAt] ?? 0n;
+      if (nativeIn > 0n && d.tax.peek(ctx, leg) === undefined)
+        void legVenue
+          .quote(ctx, funding.leg, 'buy', [nativeIn])
+          .then(([out]) => (out ? d.tax.get(ctx, { ...leg, out }, nativeIn) : null))
+          .catch(() => null);
+    }
   }
 
   return {

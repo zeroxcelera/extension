@@ -14,6 +14,16 @@ describe('shortErr', () => {
     );
   });
 
+  it('cuts raw revert data to its ends, so it cannot stretch the layout', () => {
+    const data = '0x5c0dee5d' + '0'.repeat(120) + '40' + '0'.repeat(62) + '84';
+    const msg = shortErr(new Error(`Execution reverted with reason: ${data}.`));
+    expect(msg).toBe('Execution reverted with reason: 0x5c0dee…000084.');
+    // An address alone is still masked whole.
+    expect(shortErr(new Error('to 0x15AA49e28cf51b3060666DB2366DabAe3F0952BB failed'))).toBe(
+      'to 0x… failed',
+    );
+  });
+
   it('turns a gas shortfall into a plain reason without the address', () => {
     const msg =
       'insufficient funds for gas * price + value: address 0x15AA49e28cf51b3060666DB2366DabAe3F0952BB have 0 want 4';
