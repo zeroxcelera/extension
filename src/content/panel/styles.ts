@@ -64,6 +64,10 @@ export const PANEL_CSS = `
 
 .pos { display: flex; justify-content: space-between; gap: 8px; padding: 7px 9px; border-radius: 9px; background: var(--surface); font-family: var(--num); font-size: 12.5px; }
 .pos .muted, .pos .faint { font-family: var(--ui); font-size: 12px; }
+.pos > span:last-child { text-align: right; }
+.pnl { display: block; font-size: 11.5px; }
+.pnl.up { color: var(--buy); }
+.pnl.down { color: var(--sell); }
 
 /* trade keys: the panel's one loud element */
 .lbl-row { display: flex; align-items: center; gap: 4px; margin-bottom: 5px; }

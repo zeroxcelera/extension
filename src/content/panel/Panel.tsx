@@ -11,6 +11,7 @@ import {
   parseDecimalInput,
 } from '../../shared/format';
 import type { PushEvent } from '../../shared/messages';
+import { unrealisedPnl } from '../../shared/pnl';
 import type {
   BlockedAction,
   PanelState,
@@ -430,6 +431,16 @@ export function Panel({ detection }: { detection: Detection | null }) {
   const totalUsd = state?.nativeUsd ? Number(formatEther(totalWei)) * state.nativeUsd : null;
   const holdingUsd =
     quotes?.tokenUsd && t ? Number(formatUnits(holding, t.decimals)) * quotes.tokenUsd : null;
+  // Of the tokens bought through Celera and still held: value now against what they cost.
+  const pnl =
+    t && state
+      ? unrealisedPnl(
+          state.wallets.filter((w) => w.selected),
+          t.decimals,
+          quotes?.tokenUsd ?? null,
+          state.nativeUsd,
+        )
+      : null;
   const nativeBal = (state?.wallets ?? [])
     .filter((w) => w.selected)
     .reduce((s, w) => s + BigInt(w.native), 0n);
@@ -580,6 +591,16 @@ export function Panel({ detection }: { detection: Detection | null }) {
               <>
                 {formatToken(holding, t.decimals)} {t.symbol}
                 {holdingUsd !== null && <span class="muted"> · {formatUsd(holdingUsd)}</span>}
+                {pnl && (
+                  <span
+                    class={`pnl ${pnl.usd >= 0 ? 'up' : 'down'}`}
+                    title="Unrealised PnL of the tokens bought through Celera, gas not included"
+                  >
+                    {pnl.usd >= 0 ? '+' : '−'}
+                    {formatUsd(Math.abs(pnl.usd))} ({pnl.bps >= 0 ? '+' : '−'}
+                    {formatPercent(Math.abs(pnl.bps))})
+                  </span>
+                )}
               </>
             ) : (
               <span class="faint">No position</span>

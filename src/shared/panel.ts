@@ -10,6 +10,8 @@ export interface PanelWallet {
   selected: boolean;
   native: string;
   token: string;
+  /** Tokens bought through Celera and still open, with their native cost (for PnL). */
+  cost?: { tokens: string; costWei: string };
 }
 
 export interface PanelState {

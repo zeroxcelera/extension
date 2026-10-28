@@ -1,6 +1,8 @@
 import { formatUnits, parseEther, type Address } from 'viem';
 import type { PanelState, QuoteSet, QuoteView, TaxView } from '../shared/panel';
+import { costBasis } from '../shared/pnl';
 import { readBalances } from './balances';
+import type { HistoryStore } from './history';
 import { readTokenMeta } from './resolve';
 import type { AggregatorCheck } from './trade/aggregator-check';
 import { chainContext, type EngineDeps, type TradeEngine } from './trade/engine';
@@ -17,6 +19,7 @@ export type PanelDeps = Pick<
   'settings' | 'client' | 'fetchJson' | 'aggregator' | 'now'
 > & {
   vault: Vault;
+  history: Pick<HistoryStore, 'list'>;
   prices: PriceService;
   routing: Routing;
   tax: TaxService;
@@ -80,19 +83,27 @@ export async function panelState(
     ).catch(() => []),
     Promise.resolve(d.prices.peek(ctx)),
   ]);
+  const basis = costBasis(await d.history.list(), chainId, token);
   return {
     ...base,
     locked: false,
     nativeUsd,
-    wallets: accounts.map((a, i) => ({
-      id: a.id,
-      name: a.name,
-      address: a.address,
-      primary: a.primary,
-      selected: selected.has(a.id),
-      native: (balances[i]?.native ?? 0n).toString(),
-      token: (balances[i]?.token ?? 0n).toString(),
-    })),
+    wallets: accounts.map((a, i) => {
+      const b = basis.get(a.id);
+      return {
+        id: a.id,
+        name: a.name,
+        address: a.address,
+        primary: a.primary,
+        selected: selected.has(a.id),
+        native: (balances[i]?.native ?? 0n).toString(),
+        token: (balances[i]?.token ?? 0n).toString(),
+        ...(b &&
+          b.tokens > 0n && {
+            cost: { tokens: b.tokens.toString(), costWei: b.costWei.toString() },
+          }),
+      };
+    }),
   };
 }
 
