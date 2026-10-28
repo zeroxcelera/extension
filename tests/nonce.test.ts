@@ -66,6 +66,18 @@ describe('fees', () => {
     expect(f.maxFeePerGas).toBe(15_000_000n);
   });
 
+  it('keeps max fee headroom over the base fee even when the setting is 1x', () => {
+    // A 1x max fee was refused on Robinhood Chain one block later (base fee 20112000 >
+    // maxFeePerGas 20034000).
+    const f = computeFees(getChain(4663)!, 20_034_000n, {
+      priorityFeeGwei: '0',
+      maxFeeMultiplier: 1,
+      slippageBps: 500,
+    });
+    expect(f.maxFeePerGas).toBe(25_042_500n);
+    expect(f.maxFeePerGas).toBeGreaterThan(20_112_000n);
+  });
+
   it('replacement bumps both fees by >10%', () => {
     const f = { maxFeePerGas: 1000n, maxPriorityFeePerGas: 100n };
     const b = bumpFees(f, { maxFeePerGas: 0n, maxPriorityFeePerGas: 0n });

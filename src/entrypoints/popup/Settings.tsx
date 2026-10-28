@@ -338,7 +338,7 @@ function Chains() {
             label="Max fee multiplier (× base fee)"
             value={s.maxFeeMultiplier}
             decimals
-            hint="Headroom for base-fee spikes; you only pay the actual fee."
+            hint="Headroom for base-fee spikes; you only pay the actual fee. At least 1.25."
             onSave={(v) => update({ maxFeeMultiplier: Number(v) })}
           />
 

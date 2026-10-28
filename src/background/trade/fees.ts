@@ -36,9 +36,18 @@ export class FeeCache {
   }
 }
 
+/**
+ * Least max-fee headroom over the base fee, whatever the setting says. The base fee moves
+ * between blocks (up to 12.5% on Ethereum, ~3% steps on Robinhood Chain) and a max fee
+ * below it is refused outright, while the headroom itself costs nothing: only the actual
+ * base fee (+ tip) is paid.
+ */
+const MIN_FEE_MULTIPLIER_BPS = 12_500n;
+
 export function computeFees(chain: ChainConfig, baseFee: bigint, preset: GasPreset): Fees {
   const prio = chain.feeModel === 'arbitrum' ? 0n : parseGwei(preset.priorityFeeGwei);
-  const multBps = BigInt(Math.round(preset.maxFeeMultiplier * 10_000));
+  const setBps = BigInt(Math.round(preset.maxFeeMultiplier * 10_000));
+  const multBps = setBps > MIN_FEE_MULTIPLIER_BPS ? setBps : MIN_FEE_MULTIPLIER_BPS;
   let maxFee = (baseFee * multBps) / 10_000n + prio;
   if (maxFee < prio) maxFee = prio;
   if (maxFee === 0n) maxFee = 1n;
